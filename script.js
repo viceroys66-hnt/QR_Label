@@ -248,51 +248,94 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // Kiosk Mode Command Copy Function
+    window.copyKioskCommand = function() {
+        const command = "chrome.exe --kiosk-printing";
+        navigator.clipboard.writeText(command).then(() => {
+            const btn = document.querySelector('#kiosk-modal .btn-primary');
+            const originalText = btn.innerText;
+            btn.innerText = "명령어가 복사되었습니다!";
+            btn.style.background = "#059669";
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.style.background = "#1e293b";
+            }, 2000);
+        });
+    };
+
     // Show Kiosk Tooltip Modal
     document.querySelector('.kiosk-tip')?.addEventListener('click', () => {
         document.getElementById('kiosk-modal').style.display = 'flex';
     });
     document.querySelector('.kiosk-tip')?.style.setProperty('cursor', 'pointer');
 
-    // Sequential Print Function (Handles overlapping by adding 2s delays)
+    // Sequential Print Function (Fix for skipped pages via Single-Label Hub)
     window.sequentialPrint = async function() {
         const labels = document.querySelectorAll('.label-print-wrapper');
+        const overlay = document.getElementById('print-overlay');
+        const statusText = document.getElementById('print-status-text');
+        const progressBar = document.getElementById('print-progress-bar');
+        const printArea = document.getElementById('print-area');
+
         if (labels.length === 0) {
             alert('인쇄할 라벨이 없습니다.');
             return;
         }
 
-        const confirmMsg = `${labels.length}개의 라벨을 2초 간격으로 자동 순차 인쇄합니다.\n\n* 중요: 브라우저가 '키오스크 프린팅' 모드가 아니면 매 페이지마다 확인창이 뜹니다. 계속하시겠습니까?`;
+        const confirmMsg = `${labels.length}개의 라벨을 약 3초 간격으로 '자동 순차 인쇄'합니다.\n\n* 중요: 브라우저가 '키오스크 프린팅' 모드여야 클릭 없이 진행됩니다. 계속하시겠습니까?`;
         if (!confirm(confirmMsg)) {
             return;
         }
 
+        // Show Progress Overlay
+        overlay.style.display = 'flex';
         document.body.classList.add('sequential-print-active');
 
         for (let i = 0; i < labels.length; i++) {
-            const label = labels[i];
+            const originalLabel = labels[i];
+            const currentCount = i + 1;
+            const progress = (currentCount / labels.length) * 100;
+
+            // Update UI
+            statusText.innerText = `라벨 인쇄 중 (${currentCount} / ${labels.length})`;
+            progressBar.style.width = `${progress}%`;
+
+            // CRITICAL: Clean injection method
+            // 1. Clear previous print job
+            printArea.innerHTML = '';
             
-            // Mark current label for printing
-            label.classList.add('current-label');
+            // 2. Clone the label to avoid moving original DOM elements from the layout
+            const labelClone = originalLabel.cloneNode(true);
             
-            // Trigger layout reflow and wait for rendering to settle
-            void label.offsetHeight; 
-            await new Promise(r => setTimeout(r, 250)); 
+            // Remove the problematic class that might trigger hiding, or style it directly
+            labelClone.classList.remove('print-only'); 
+            labelClone.style.display = 'block'; 
+            labelClone.style.visibility = 'visible';
+            labelClone.style.opacity = '1';
             
-            // Trigger print
+            printArea.appendChild(labelClone);
+            
+            // 3. Wait for rendering to settle (QR, Table, Fonts)
+            void labelClone.offsetHeight; 
+            await new Promise(r => setTimeout(r, 1000)); // 1s Rendering Buffer (Crucial for 2nd+ pages)
+            
+            // 4. Trigger print
             window.print();
             
-            // Wait for 2 seconds before next label
+            // 5. Short delay before clearing to ensure print engine captured it
+            await new Promise(r => setTimeout(r, 500)); 
+            printArea.innerHTML = ''; 
+
+            // 6. Inter-label gap for printer buffer safety
             if (i < labels.length - 1) {
-                await new Promise(r => setTimeout(r, 2000));
+                await new Promise(r => setTimeout(r, 3000)); // 3s Gap
             }
-            
-            // Unmark current label
-            label.classList.remove('current-label');
         }
 
+        // Clean up
         document.body.classList.remove('sequential-print-active');
-        alert('순차 인쇄가 완료되었습니다.');
+        overlay.style.display = 'none';
+        alert('모든 라벨의 순차 인쇄가 완료되었습니다.');
     };
 });
 

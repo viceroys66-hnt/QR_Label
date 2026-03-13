@@ -341,17 +341,17 @@ h1 {
     }
 
     /* Sequential Print Helper Classes */
-    body.sequential-print-active .label-print-wrapper {
-        display: none !important;
-    }
-    body.sequential-print-active .label-print-wrapper.current-label {
-        display: block !important;
-    }
+    /* No longer needed with the Single-Label Hub injection method */
 }
 
 @keyframes slideUp {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 footer {

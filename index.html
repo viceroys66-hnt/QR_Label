@@ -39,32 +39,51 @@
                         <p style="color: #64748b; font-size: 0.9rem; margin-top: 4px;">출력하지 않을 라벨은 X 버튼을 눌러 제거할 수 있습니다.</p>
                     </div>
                     <div class="actions">
-                        <button class="btn-secondary" onclick="window.print()">
-                            <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-                            전체 인쇄 (미리보기 정렬됨)
-                        </button>
                         <div style="position: relative; display: inline-block;">
                             <button class="btn-secondary" onclick="sequentialPrint()" style="background: #5c27fe;">
                                 <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
-                                자동 순차 인쇄 (2초 간격)
+                                자동 순차 인쇄 (3초 간격)
                             </button>
-                            <div class="kiosk-tip" style="font-size: 11px; color: #5c27fe; margin-top: 5px; font-weight: 600;">* 클릭 없이 자동 출력하는 법 (Kiosk)</div>
+                            <div class="kiosk-tip" style="font-size: 11px; color: #5c27fe; margin-top: 5px; font-weight: 700; text-decoration: underline; cursor: pointer;">
+                                🚨 클릭 없이 "완전 자동 인쇄" 설정법
+                            </div>
                         </div>
                         <button class="btn-danger" onclick="location.reload()">새로고침</button>
                     </div>
                     <!-- Kiosk Mode Instructions Modal/Overlay -->
-                    <div id="kiosk-modal" class="modal-hidden" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
-                        <div style="background: white; padding: 2rem; border-radius: 16px; max-width: 500px; line-height: 1.6;">
-                            <h3 style="margin-top: 0;">자동 인쇄(무인 클릭) 설정 방법</h3>
-                            <p>수십 장의 라벨을 클릭 없이 2초 간격으로 자동 출력하려면 브라우저를 <strong>키오스크 모드</strong>로 실행해야 합니다.</p>
-                            <ol style="padding-left: 20px;">
-                                <li>열려있는 모든 크롬(Chrome) 창을 닫습니다.</li>
-                                <li>윈도우 실행(Win + R) 창을 엽니다.</li>
-                                <li>아래 명령어를 복사하여 입력 후 확인을 누릅니다:<br>
-                                <code style="display:block; background:#f1f5f9; padding:10px; margin:10px 0; border-radius:5px; word-break:break-all;">chrome.exe --kiosk-printing</code></li>
-                            </ol>
-                            <button class="btn-primary" onclick="this.parentElement.parentElement.style.display='none'" style="width: 100%; margin-top: 1rem;">닫기</button>
+                    <div id="kiosk-modal" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(4px);">
+                        <div style="background: white; padding: 2.5rem; border-radius: 24px; max-width: 550px; line-height: 1.6; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);">
+                            <h2 style="margin-top: 0; color: #1e293b; display: flex; align-items: center;">
+                                <span style="background: #5c27fe; color: white; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; margin-right: 12px; font-size: 18px;">!</span>
+                                완전 자동 인쇄 설정 가이드
+                            </h2>
+                            <p style="color: #64748b; margin-bottom: 1.5rem;">수십 장의 라벨을 <strong>매번 클릭하는 번거로움 없이</strong> 2초 간격으로 연속 출력하기 위한 필수 설정입니다.</p>
+                            
+                            <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 1.5rem; border-radius: 16px; margin-bottom: 1.5rem;">
+                                <ol style="padding-left: 1.2rem; margin: 0;">
+                                    <li style="margin-bottom: 0.8rem;">열려있는 <strong>모든 크롬 창을 종료</strong>합니다.</li>
+                                    <li style="margin-bottom: 0.8rem;">단축키 <kbd style="background:#e2e8f0; padding: 2px 4px; border-radius: 4px;">Win + R</kbd> 키를 눌러 실행창을 켭니다.</li>
+                                    <li>아래 명령어를 복사하여 붙여넣고 확인을 누릅니다.</li>
+                                </ol>
+                                <div style="display: flex; align-items: center; gap: 8px; margin-top: 1rem;">
+                                    <code id="kiosk-code" style="flex: 1; background: #1e293b; color: #38bdf8; padding: 12px; border-radius: 8px; font-family: monospace; font-size: 14px; overflow-x: auto;">chrome.exe --kiosk-printing</code>
+                                    <button class="btn-primary" onclick="copyKioskCommand()" style="white-space: nowrap; padding: 10px 15px;">복사</button>
+                                </div>
+                            </div>
+                            
+                            <p style="font-size: 13px; color: #ef4444; font-weight: 600;">※ 위 설정 후 브라우저가 다시 뜨면, 어떤 버튼 클릭 없이 자동으로 2초마다 인쇄됩니다.</p>
+                            
+                            <button class="btn-primary" onclick="document.getElementById('kiosk-modal').style.display='none'" style="width: 100%; margin-top: 1.5rem; background: #1e293b;">설정 완료 및 닫기</button>
                         </div>
+                    </div>
+                </div>
+                <!-- Automatic Printing Progress Overlay -->
+                <div id="print-overlay" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 2000; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+                    <div class="loader-ring" style="width: 60px; height: 60px; border: 5px solid #f1f5f9; border-top: 5px solid #5c27fe; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px;"></div>
+                    <h2 id="print-status-text" style="color: #1e293b; margin-bottom: 8px;">인쇄 준비 중...</h2>
+                    <p id="print-progress-sub" style="color: #64748b;">창을 닫거나 새로고침하지 마세요.</p>
+                    <div style="width: 300px; height: 10px; background: #f1f5f9; border-radius: 5px; margin-top: 20px; overflow: hidden;">
+                        <div id="print-progress-bar" style="width: 0%; height: 100%; background: #5c27fe; transition: width 0.3s ease;"></div>
                     </div>
                 </div>
                 <div id="label-container" class="label-grid">
