@@ -1,0 +1,361 @@
+:root {
+    --primary: #5c27fe;
+    --primary-light: #26c7f8;
+    --primary-hover: #4a1edb;
+    --bg-gradient: linear-gradient(135deg, #f0f4ff 0%, #d9e2ff 100%);
+    --card-bg: rgba(255, 255, 255, 0.9);
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --border-color: #333; /* Darker border for printing */
+    --glass-shadow: 0 10px 40px -10px rgba(0,0,0,0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', 'Noto Sans KR', sans-serif;
+    background: var(--bg-gradient);
+    min-height: 100vh;
+    color: var(--text-main);
+    line-height: 1.4;
+}
+
+.app-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(to right, var(--primary), var(--primary-light));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    font-weight: 300;
+}
+
+/* Upload Section */
+.upload-section {
+    background: var(--card-bg);
+    backdrop-filter: blur(15px);
+    border-radius: 24px;
+    padding: 3rem;
+    box-shadow: var(--glass-shadow);
+    border: 1px solid rgba(255,255,255,0.5);
+}
+
+.drop-zone {
+    border: 2px dashed #cbd5e1;
+    border-radius: 20px;
+    padding: 4rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.drop-zone:hover, .drop-zone.dragover {
+    border-color: var(--primary);
+    background: rgba(92, 39, 254, 0.05);
+    transform: scale(1.01);
+}
+
+.icon-group {
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+    filter: drop-shadow(0 4px 6px rgba(92, 39, 254, 0.2));
+}
+
+.btn-primary {
+    background: linear-gradient(to right, var(--primary), var(--primary-hover));
+    color: white;
+    border: none;
+    padding: 0.8rem 2.5rem;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 2rem;
+    box-shadow: 0 10px 20px -5px rgba(92, 39, 254, 0.3);
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 25px -5px rgba(92, 39, 254, 0.4);
+}
+
+/* Preview Section */
+.preview-section {
+    margin-top: 4rem;
+    animation: slideUp 0.6s ease;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.btn-secondary {
+    background: #1e293b;
+    color: white;
+    border: none;
+    padding: 0.7rem 1.8rem;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.btn-danger {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    padding: 0.7rem 1.5rem;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.hidden { display: none !important; }
+
+/* Strictly hide print elements on screen */
+.print-only { display: none !important; }
+
+/* UI Preview Card */
+.label-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+}
+
+.label-card {
+    background: white;
+    border-radius: 16px;
+    padding: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    border: 1px solid #f1f5f9;
+}
+
+.label-info .label-title {
+    font-weight: normal;
+    color: #000;
+    margin-bottom: 0.25rem;
+    font-size: 13px;
+}
+
+.label-info {
+    font-size: 13px;
+    font-weight: normal;
+    color: #000;
+}
+
+.label-qr {
+    width: 60px;
+    height: 60px;
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 4px;
+}
+
+.btn-remove {
+    background: #ffeeee;
+    color: #ef4444;
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-remove:hover {
+    background: #ef4444;
+    color: white;
+    transform: scale(1.1);
+}
+
+/* Print Styles (Precise Layout) */
+@media print {
+    .no-print { display: none !important; }
+    
+    @page {
+        margin: 0 !important;
+        size: 101mm 50.5mm; /* 물리적 라벨지 전체 크기 101x50.5 (위13.5 + 라벨24 + 아래13) */
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        background: white;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .print-only {
+        display: block !important;
+    }
+
+    .label-print-wrapper {
+        page-break-after: always;
+        page-break-inside: avoid;
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+        width: 101mm;
+        height: 50.5mm; /* 전체 피치 50.5mm */
+        position: relative;
+    }
+
+    /* Apply strict font styling requested by user */
+    .label-print-container {
+        font-family: "맑은 고딕", "Malgun Gothic", sans-serif !important;
+        font-size: 13px !important;
+        font-weight: normal !important;
+        color: #000 !important;
+        width: 101mm;
+        height: 24mm; /* 실제 라벨 인쇄 영역 24mm */
+        box-sizing: border-box;
+        position: absolute;
+        top: 13.5mm; /* 위쪽 간격 13.5mm 반영 */
+        left: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transform: translateX(-10mm); /* 모든 내용을 한꺼번에 왼쪽으로 10mm 강제 이동 */
+    }
+
+    .top-spacer {
+        display: none; /* Flexbox 중앙 정렬로 대체되므로 여백 박스 숨김 */
+    }
+
+    .label-table {
+        width: 83mm; /* 글씨가 찍히는 표 너비 */
+        border-collapse: collapse;
+        table-layout: fixed;
+    }
+
+    .label-table td {
+        border: none;
+        padding: 0;
+        vertical-align: middle;
+        font-family: inherit;
+        font-size: inherit;
+        font-weight: inherit;
+        color: inherit !important;
+    }
+
+    .row-6mm { height: 6mm; }
+    .row-9mm { height: 9mm; }
+
+    .w-18mm { width: 18mm; }
+    .w-28mm { width: 28mm; }
+    .w-19mm { width: 19mm; }
+
+    /* Shift acquisition date value 3mm left, 1mm down, and prevent wrapping */
+    tr.row-6mm td:nth-child(4).cell-value {
+        position: relative;
+        left: -3mm;
+        top: 1mm;
+        white-space: nowrap !important;
+    }
+
+    .cell-label {
+        text-align: center !important;
+        padding: 0 !important;
+    }
+
+    .cell-value {
+        text-align: left;
+        padding-left: 2mm !important; 
+        white-space: nowrap !important; /* Prevent any value from wrapping */
+        position: relative;
+        top: 1mm; /* Global 1mm downward shift for text */
+    }
+
+    .barcode-text {
+        font-family: inherit;
+        font-size: inherit;
+        font-weight: inherit;
+        color: inherit !important;
+        line-height: 10mm; /* Align vertically with QR */
+        position: relative;
+        top: 2mm; /* Cumulative 2mm down (1mm more than before) */
+    }
+
+    /* Adjusted positioning for larger QR */
+    .row-9mm td div {
+        bottom: -1mm !important; /* Lifted up by 1mm to avoid label lines */
+    }
+
+    /* Shifted 1mm up (-2mm -> -1mm) and reverted to 15.5mm for recognition stability */
+    .qr-code-box {
+        width: 15.5mm !important; 
+        height: 15.5mm !important;
+        display: inline-block;
+        vertical-align: top;
+        background: #ffffff !important;
+        padding: 1.0mm !important; /* Bold Quiet Zone */
+        border-radius: 0.2mm;
+        box-shadow: 0 0 0 0.2mm #ffffff; 
+    }
+
+    .qr-code-box img {
+        width: 13.5mm !important;
+        height: 13.5mm !important;
+        display: block;
+        image-rendering: pixelated; 
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    /* Sequential Print Helper Classes */
+    body.sequential-print-active .label-print-wrapper {
+        display: none !important;
+    }
+    body.sequential-print-active .label-print-wrapper.current-label {
+        display: block !important;
+    }
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+footer {
+    text-align: center;
+    margin-top: 5rem;
+    color: var(--text-muted);
+}
