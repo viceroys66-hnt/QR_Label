@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const previewSection = document.getElementById('preview-section');
     const labelContainer = document.getElementById('label-container');
     const printArea = document.getElementById('print-area');
+    let labelIndex = 0;
 
     // Drag and Drop listeners
     ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
@@ -60,10 +61,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (dateStr === '') return '-';
 
         // 1. Handle Excel serial numbers if they come in as numbers
-        if (!isNaN(dateStr) && dateStr.length < 8) {
-            // XLS dates are handled by XLSX.read({cellDates: true}), 
-            // but just in case raw numbers slip through
-            const d = new Date((dateVal - 25569) * 86400 * 1000);
+        // Excel serial dates for recent years are > 40000 (e.g., 2024 is ~45000)
+        // If it's a small number like 2024, it's likely just a year string.
+        if (!isNaN(dateStr) && dateStr.length < 8 && Number(dateStr) > 30000) {
+            const d = new Date((Number(dateStr) - 25569) * 86400 * 1000);
             if (!isNaN(d.getTime())) return formatOutput(d);
         }
 
@@ -107,6 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         let addedCount = 0;
+        labelIndex = 0;
 
         data.forEach((row, index) => {
             const productType = findColumn(row, ['품명', '품목']) || '-';
@@ -131,6 +133,45 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>`;
         }
     }
+
+    window.switchTab = function(tabName) {
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.getAttribute('onclick').includes(tabName));
+        });
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.add('hidden');
+        });
+        document.getElementById(`${tabName}-tab`).classList.remove('hidden');
+    };
+
+    window.addManualLabel = function() {
+        const assetName = document.getElementById('manual-asset-name').value.trim();
+        const acquisitionDateRaw = document.getElementById('manual-acquisition-date').value.trim();
+        const productType = document.getElementById('manual-product-type').value.trim();
+        const barcodeNumber = document.getElementById('manual-barcode').value.trim();
+
+        if (!assetName && !barcodeNumber) {
+            alert('자산번호 또는 바코드번호를 입력해 주세요.');
+            return;
+        }
+
+        const acquisitionDate = acquisitionDateRaw ? formatDate(acquisitionDateRaw) : '-';
+        
+        previewSection.classList.remove('hidden');
+        createLabel(productType || '-', assetName || '-', acquisitionDate, barcodeNumber, labelIndex++);
+        
+        // Clear inputs
+        document.getElementById('manual-asset-name').value = '';
+        document.getElementById('manual-acquisition-date').value = '';
+        document.getElementById('manual-product-type').value = '';
+        document.getElementById('manual-barcode').value = '';
+        
+        // Brief scroll to let user know it was added
+        window.scrollTo({
+            top: previewSection.offsetTop - 100,
+            behavior: 'smooth'
+        });
+    };
 
     function findColumn(row, possibleNames) {
         const keys = Object.keys(row);
@@ -271,11 +312,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Sequential Print Function (Fix for skipped pages via Single-Label Hub)
     window.sequentialPrint = async function() {
+        console.log('sequentialPrint triggered');
         const labels = document.querySelectorAll('.label-print-wrapper');
         const overlay = document.getElementById('print-overlay');
         const statusText = document.getElementById('print-status-text');
         const progressBar = document.getElementById('print-progress-bar');
         const printArea = document.getElementById('print-area');
+
+        console.log('Found labels:', labels.length);
 
         if (labels.length === 0) {
             alert('인쇄할 라벨이 없습니다.');

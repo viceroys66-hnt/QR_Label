@@ -20,7 +20,12 @@
         </header>
 
         <main>
-            <section class="upload-section">
+            <div class="input-tabs">
+                <button class="tab-btn active" onclick="switchTab('upload')">Excel 업로드</button>
+                <button class="tab-btn" onclick="switchTab('manual')">개별 직접 입력</button>
+            </div>
+
+            <section id="upload-tab" class="upload-section tab-content">
                 <div id="drop-zone" class="drop-zone">
                     <div class="icon-group">
                         <svg viewBox="0 0 24 24" width="48" height="48" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
@@ -32,6 +37,31 @@
                 </div>
             </section>
 
+            <section id="manual-tab" class="manual-section tab-content hidden">
+                <div class="manual-card">
+                    <h2>자산 정보 직접 입력</h2>
+                    <div class="manual-form">
+                        <div class="form-group">
+                            <label for="manual-asset-name">자산번호</label>
+                            <input type="text" id="manual-asset-name" placeholder="예: A-1001">
+                        </div>
+                        <div class="form-group">
+                            <label for="manual-acquisition-date">취득일자</label>
+                            <input type="text" id="manual-acquisition-date" placeholder="예: 2024-03-16">
+                        </div>
+                        <div class="form-group">
+                            <label for="manual-product-type">품명</label>
+                            <input type="text" id="manual-product-type" placeholder="예: 노트북">
+                        </div>
+                        <div class="form-group">
+                            <label for="manual-barcode">바코드번호</label>
+                            <input type="text" id="manual-barcode" placeholder="예: BC12345678">
+                        </div>
+                    </div>
+                    <button class="btn-primary" onclick="addManualLabel()" style="width: 100%; margin-top: 2rem;">라벨 추가하기</button>
+                </div>
+            </section>
+
             <section id="preview-section" class="preview-section hidden">
                 <div class="section-header">
                     <div>
@@ -40,7 +70,7 @@
                     </div>
                     <div class="actions">
                         <div style="position: relative; display: inline-block;">
-                            <button class="btn-secondary" onclick="sequentialPrint()" style="background: #5c27fe;">
+                            <button class="btn-secondary" onclick="window.sequentialPrint()" style="background: #5c27fe;">
                                 <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
                                 자동 순차 인쇄 (3초 간격)
                             </button>

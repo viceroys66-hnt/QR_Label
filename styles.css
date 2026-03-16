@@ -102,6 +102,87 @@ h1 {
     box-shadow: 0 15px 25px -5px rgba(92, 39, 254, 0.4);
 }
 
+/* Tabs */
+.input-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.tab-btn {
+    padding: 0.8rem 2rem;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.5);
+    background: var(--card-bg);
+    color: var(--text-muted);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: var(--glass-shadow);
+}
+
+.tab-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+/* Manual Section */
+.manual-section {
+    background: var(--card-bg);
+    backdrop-filter: blur(15px);
+    border-radius: 24px;
+    padding: 3rem;
+    box-shadow: var(--glass-shadow);
+    border: 1px solid rgba(255,255,255,0.5);
+}
+
+.manual-card h2 {
+    margin-bottom: 2rem;
+    text-align: center;
+    color: var(--text-main);
+}
+
+.manual-form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.form-group input {
+    padding: 0.8rem 1rem;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    background: white;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(92, 39, 254, 0.1);
+}
+
+@media (max-width: 640px) {
+    .manual-form {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* Preview Section */
 .preview-section {
     margin-top: 4rem;
